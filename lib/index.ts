@@ -1,6 +1,10 @@
 import Core from './core';
 
-class Application extends Core {
+class Sagittarius extends Core {
+    static app = new Sagittarius();
+    private constructor(){
+        super();
+    }
 }
 
-export default Application;
+export default Sagittarius;

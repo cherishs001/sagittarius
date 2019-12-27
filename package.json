@@ -9,6 +9,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^13.1.0"
+    "@types/busboy": "^0.2.3",
+    "@types/node": "^13.1.0",
+    "cz-conventional-changelog": "^3.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "busboy": "^0.3.1"
   }
 }

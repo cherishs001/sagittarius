@@ -1,12 +1,19 @@
-import Application from '../lib';
+import Sagittarius from '../lib';
 
-const app = new Application();
+const app = Sagittarius.app;
+
 app.use(async (ctx, next) => {
-    console.log(1111);
     await next();
-    ctx.response.writeHead(200);
-    ctx.response.end("A request come in");
 });
-app.listen(3000, (): void => {
-    console.log(123);
+
+app.use(async (ctx, next) => {
+    await next();
 });
+
+app.use(async (ctx, next) => {
+    console.log(ctx.params);
+    ctx.body = {123: 1};
+    await next();
+});
+
+app.listen();
