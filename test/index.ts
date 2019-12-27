@@ -11,7 +11,6 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
-    console.log(ctx.params);
     ctx.body = {123: 1};
     await next();
 });

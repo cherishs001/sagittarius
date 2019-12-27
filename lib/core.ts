@@ -21,11 +21,11 @@ class Core {
         ];
     }
 
-    use(middleware: (ctx: Context, next: (i?: number) => {}) => {}) {
+    use(middleware: (ctx: Context, next: (i?: number) => {}) => {}): void {
         this._middleware_list.push(middleware);
     }
 
-    listen(port?: number, listeningListener?: () => void) {
+    listen(port?: number, listeningListener?: () => void): void {
         const fn = this.composeMiddleware();
         this._server = http.createServer(async (req, res) => {
             const context = new Context(req, res);
@@ -41,7 +41,7 @@ class Core {
         });
     }
 
-    composeMiddleware() {
+    composeMiddleware(): (ctx: Context) => {} {
         const middleware_list = this._middleware_list;
         return (ctx: Context) => {
             let start = -1;
