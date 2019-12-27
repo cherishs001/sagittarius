@@ -1,4 +1,5 @@
 import Core from './core';
+import Context from './context';
 
 class Sagittarius extends Core {
     static app: Sagittarius = new Sagittarius();
@@ -8,4 +9,7 @@ class Sagittarius extends Core {
     }
 }
 
-export default Sagittarius;
+export {
+    Sagittarius,
+    Context,
+};

@@ -4,21 +4,18 @@ import Context from './context';
 import error from './error';
 import response from './response';
 import params from './params';
+import Router from './router';
 
 /**
  * 提供对http的封装
  */
 class Core {
     private _server: Server;
-    private readonly _middleware_list: Array<(ctx: Context, next: (i?: number) => {}) => {}>;
+    _middleware_list: Array<(ctx: Context, next: (i?: number) => {}) => {}>;
     private _port: number = 3000;
 
     constructor() {
-        this._middleware_list = [
-            error,
-            params,
-            response,
-        ];
+        this._middleware_list = [];
     }
 
     use(middleware: (ctx: Context, next: (i?: number) => {}) => {}): void {
@@ -27,6 +24,15 @@ class Core {
 
     listen(port?: number, listeningListener?: () => void): void {
         const fn = this.composeMiddleware();
+
+        const router = new Router();
+        router.init();
+
+        this._middleware_list.unshift(router.router.bind(router));
+        this._middleware_list.unshift(response);
+        this._middleware_list.unshift(params);
+        this._middleware_list.unshift(error);
+
         this._server = http.createServer(async (req, res) => {
             const context = new Context(req, res);
             await fn(context);
