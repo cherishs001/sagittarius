@@ -1,4 +1,4 @@
-import Sagittarius from '../lib';
+import {Sagittarius} from '../lib';
 
 const app = Sagittarius.app;
 
@@ -11,7 +11,6 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
-    ctx.body = {123: 1};
     await next();
 });
 
