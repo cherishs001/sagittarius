@@ -1,5 +1,10 @@
 import {Context} from '../../lib';
 
-export default async (ctx: Context) => {
-    ctx.body = {123: 1};
-};
+export default {
+    async GET(ctx: Context) {
+        const {id} = ctx.params;
+        ctx.body = {
+            id: id,
+        };
+    },
+}

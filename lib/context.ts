@@ -1,4 +1,5 @@
 import {IncomingMessage, ServerResponse} from 'http';
+import * as url from 'url';
 
 class Context {
     request: IncomingMessage;
@@ -8,6 +9,9 @@ class Context {
     headers: object;
     method: string;
     params: any;
+    path: string;
+    url: string;
+    query: string | null;
 
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.request = req;
@@ -16,6 +20,10 @@ class Context {
         this.status = 200;
         this.headers = req.headers;
         this.method = req.method;
+        const Url = url.parse(req.url);
+        this.path = Url.pathname;
+        this.url = Url.path;
+        this.query = Url.query;
     }
 }
 

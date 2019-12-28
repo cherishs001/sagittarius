@@ -95,10 +95,8 @@ const params = async (ctx: Context, next) => {
         }
     }
     if (ctx.method === 'GET') {
-        const url = ctx.request.url;
-        const urlSplit = url.split('?');
-        if (urlSplit.length > 1) {
-            ctx.params = parseQueryStr(urlSplit[1], false);
+        if (ctx.query) {
+            ctx.params = parseQueryStr(ctx.query, false);
         } else {
             ctx.params = {};
         }

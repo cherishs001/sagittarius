@@ -2,16 +2,6 @@ import {Sagittarius} from '../lib';
 
 const app = Sagittarius.app;
 
-app.use(async (ctx, next) => {
-    await next();
+app.listen(3000, () => {
+    console.log('listen 3000 port');
 });
-
-app.use(async (ctx, next) => {
-    await next();
-});
-
-app.use(async (ctx, next) => {
-    await next();
-});
-
-app.listen();

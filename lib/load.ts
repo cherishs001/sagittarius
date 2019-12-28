@@ -18,12 +18,10 @@ class Load {
                     const name = filePath.replace('.ts', '');
                     const key = file.replace('.ts', '');
                     const module = require(name).default;
-                    if (typeof module === 'function') {
-                        dynamicModules.push({
-                            name: key,
-                            func: module,
-                        });
-                    }
+                    dynamicModules.push({
+                        name: key,
+                        func: module,
+                    });
                 }
             }
         });
