@@ -3,7 +3,7 @@ import * as path from 'path';
 import Context from './context';
 
 class Router {
-    private _services: object;
+    private readonly _services: object;
 
     constructor() {
         this._services = {};
