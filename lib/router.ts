@@ -10,7 +10,7 @@ class Router {
         this._services = {};
     }
 
-    init() {
+    init(): void {
         // 动态导入路由
         const services = Load.init(path.join(process.cwd(), './services'));
         for (const item of services) {
@@ -24,7 +24,7 @@ class Router {
         }
     }
 
-    async router(ctx: Context, next) {
+    async router(ctx: Context, next: (i?: number) => {}): Promise<void> {
         if (this._services.hasOwnProperty(ctx.path)) {
             if (ctx.method === 'GET' && this._services[ctx.path].GET) {
                 await this._services[ctx.path].GET(ctx);

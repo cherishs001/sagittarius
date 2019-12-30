@@ -11,8 +11,8 @@ import Router from './router';
  */
 class Core {
     private _server: Server;
-    _middleware_list: Array<(ctx: Context, next: (i?: number) => {}) => {}>;
     private _port: number = 3000;
+    private readonly _middleware_list: Array<(ctx: Context, next: (i?: number) => {}) => {}>;
 
     constructor() {
         this._middleware_list = [];

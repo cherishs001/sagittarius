@@ -5,9 +5,6 @@ import * as path from 'path';
  * 动态加载类
  */
 class Load {
-    constructor() {
-    }
-
     static init(dir: string): Array<any> {
         const dynamicModules = [];
         fs.readdirSync(dir).map(file => {
