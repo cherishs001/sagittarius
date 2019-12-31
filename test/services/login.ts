@@ -1,4 +1,4 @@
-import {Service} from '../../lib';
+import {Context, Service} from '../../lib';
 
 export default class Login extends Service {
     constructor() {
@@ -6,14 +6,14 @@ export default class Login extends Service {
         this.path = '/api/v1/login';
     }
 
-    async GET(ctx) {
+    async GET(ctx: Context): Promise<void> {
         const {id} = ctx.params;
         ctx.body = {
             id: id,
         };
     };
 
-    async POST(ctx) {
+    async POST(ctx: Context): Promise<void> {
         const {id} = ctx.params;
         ctx.body = {
             id: id,

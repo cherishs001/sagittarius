@@ -1,5 +1,5 @@
 import {IncomingMessage, ServerResponse} from 'http';
-import * as url from 'url';
+import * as url from 'fast-url-parser';
 
 class Context {
     request: IncomingMessage;
