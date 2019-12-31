@@ -5,6 +5,8 @@ import error from './error';
 import response from './response';
 import params from './params';
 import Router from './router';
+import Load from './load';
+import * as path from "path";
 
 /**
  * 提供对http的封装
@@ -22,29 +24,41 @@ class Core {
         this._middleware_list.push(middleware);
     }
 
-    listen(port?: number, listeningListener?: () => void): void {
-        const fn = this.composeMiddleware();
+    listen(port?: number, listeningListener?: () => void): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            const fn = this.composeMiddleware();
 
-        const router = new Router();
-        router.init();
+            const router = new Router();
+            router.init();
 
-        this._middleware_list.unshift(router.router.bind(router));
-        this._middleware_list.unshift(response);
-        this._middleware_list.unshift(params);
-        this._middleware_list.unshift(error);
-
-        this._server = http.createServer(async (req, res) => {
-            const context = new Context(req, res);
-            await fn(context);
-        });
-        if (port) {
-            this._port = port;
-        }
-        this._server.listen(this._port, () => {
-            if (listeningListener) {
-                listeningListener();
+            // 加载配置
+            const config = Load.init(path.join(process.cwd(), './config'));
+            const configs = {};
+            for (const item of config) {
+                const c = new item['func'];
+                await c.init();
+                configs[item['name']] = c;
             }
-        });
+
+            this._middleware_list.unshift(router.router.bind(router));
+            this._middleware_list.unshift(response);
+            this._middleware_list.unshift(params);
+            this._middleware_list.unshift(error);
+
+            this._server = http.createServer(async (req, res) => {
+                const context = new Context(req, res);
+                await fn(context);
+            });
+            if (port) {
+                this._port = port;
+            }
+            this._server.listen(this._port, () => {
+                if (listeningListener) {
+                    listeningListener();
+                    resolve();
+                }
+            });
+        })
     }
 
     composeMiddleware(): (ctx: Context) => {} {

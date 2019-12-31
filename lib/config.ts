@@ -1,5 +1,5 @@
 interface Database {
-    type: string,
+    type: 'mysql'|'redis',
     host: string,
     port: number,
     user?: string,
@@ -10,8 +10,12 @@ interface Database {
 abstract class Config {
     port: number = 3000;
     host: string = '0.0.0.0';
-    database: Database;
+    database: {
+        [propName: string]: Database;
+    };
     env: string = 'dev';
 
     async init(): Promise<void> {};
 }
+
+export default Config;
