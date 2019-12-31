@@ -33,14 +33,14 @@ class Core {
         this._middleware_list.unshift(params);
         this._middleware_list.unshift(error);
 
-        this._server = http.createServer(async (req, res) => {
-            const context = new Context(req, res);
-            await fn(context);
-        });
         if (port) {
             this._port = port;
         }
-        this._server.listen(this._port, () => {
+
+        this._server = http.createServer(async (req, res) => {
+            const context = new Context(req, res);
+            await fn(context);
+        }).listen(this._port, () => {
             if (listeningListener) {
                 listeningListener();
             }
