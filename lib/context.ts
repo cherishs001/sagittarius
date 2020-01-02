@@ -1,5 +1,4 @@
 import {IncomingMessage, ServerResponse} from 'http';
-import * as url from 'url';
 import Config from './config';
 import * as url from 'fast-url-parser';
 

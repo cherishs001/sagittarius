@@ -27,12 +27,12 @@ class Core {
     }
 
     listen(listeningListener?: (Environment) => void): Promise<void> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise<void>(async (resolve, reject) => {
             const fn = this.composeMiddleware();
 
             const router = new Router();
             router.init();
-          
+
             // 加载配置
             const config = Load.init(path.join(process.cwd(), './config'));
             const configs = {};
@@ -41,22 +41,7 @@ class Core {
                 await c.init();
                 configs[item['name']] = c;
             }
-        this._middleware_list.unshift(router.router.bind(router));
-        this._middleware_list.unshift(response);
-        this._middleware_list.unshift(params);
-        this._middleware_list.unshift(error);
 
-        if (port) {
-            this._port = port;
-        }
-
-        this._server = http.createServer(async (req, res) => {
-            const context = new Context(req, res);
-            await fn(context);
-        }).listen(this._port, () => {
-            if (listeningListener) {
-                listeningListener();
-            }
             this._config = configs[process.env.NODE_ENV];
 
             this._middleware_list.unshift(router.router.bind(router));
@@ -64,19 +49,18 @@ class Core {
             this._middleware_list.unshift(params);
             this._middleware_list.unshift(error);
 
+            this._port = this._config['port'];
+
             this._server = http.createServer(async (req, res) => {
                 const context = new Context(req, res);
-                context.env = this._config;
                 await fn(context);
-            });
-            this._port = this._config['port'];
-            this._server.listen(this._port, () => {
+            }).listen(this._port, () => {
                 if (listeningListener) {
                     listeningListener(this._config);
                     resolve();
                 }
             });
-        })
+        });
     }
 
     composeMiddleware(): (ctx: Context) => {} {
