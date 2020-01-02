@@ -1,10 +1,7 @@
 import {Context, Service} from '../../lib';
 
 export default class Login extends Service {
-    constructor() {
-        super();
-        this.path = '/api/v1/login';
-    }
+    path = '/api/v1/login';
 
     async GET(ctx: Context): Promise<void> {
         const {id} = ctx.params;

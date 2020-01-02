@@ -1,8 +1,8 @@
 import {Config} from '../../lib';
 
-export default class Test extends Config {
+export default class Dev extends Config {
     async init(): Promise<void> {
-        this.env = 'test';
+        this.env = 'dev';
         this.port = 3000;
     }
 }

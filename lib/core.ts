@@ -7,7 +7,6 @@ import params from './params';
 import Router from './router';
 import Load from './load';
 import * as path from "path";
-import Config from './config';
 
 /**
  * 提供对http的封装
@@ -27,7 +26,7 @@ class Core {
     }
 
     listen(listeningListener?: (Environment) => void): Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
+        return new Promise<void>(async (resolve) => {
             const fn = this.composeMiddleware();
 
             const router = new Router();
