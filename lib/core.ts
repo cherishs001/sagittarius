@@ -7,6 +7,7 @@ import params from './params';
 import Router from './router';
 import Load from './load';
 import * as path from "path";
+import Config from './config';
 
 /**
  * 提供对http的封装
@@ -15,6 +16,7 @@ class Core {
     private _server: Server;
     private _port: number = 3000;
     private readonly _middleware_list: Array<(ctx: Context, next: (i?: number) => {}) => {}>;
+    private _config: any;
 
     constructor() {
         this._middleware_list = [];
@@ -24,7 +26,7 @@ class Core {
         this._middleware_list.push(middleware);
     }
 
-    listen(port?: number, listeningListener?: () => void): Promise<void> {
+    listen(listeningListener?: (Environment) => void): Promise<void> {
         return new Promise(async (resolve, reject) => {
             const fn = this.composeMiddleware();
 
@@ -39,6 +41,7 @@ class Core {
                 await c.init();
                 configs[item['name']] = c;
             }
+            this._config = configs[process.env.NODE_ENV];
 
             this._middleware_list.unshift(router.router.bind(router));
             this._middleware_list.unshift(response);
@@ -47,14 +50,13 @@ class Core {
 
             this._server = http.createServer(async (req, res) => {
                 const context = new Context(req, res);
+                context.env = this._config;
                 await fn(context);
             });
-            if (port) {
-                this._port = port;
-            }
+            this._port = this._config['port'];
             this._server.listen(this._port, () => {
                 if (listeningListener) {
-                    listeningListener();
+                    listeningListener(this._config);
                     resolve();
                 }
             });

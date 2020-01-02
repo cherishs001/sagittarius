@@ -1,5 +1,6 @@
 import {IncomingMessage, ServerResponse} from 'http';
 import * as url from 'url';
+import Config from './config';
 
 class Context {
     request: IncomingMessage;
@@ -12,6 +13,7 @@ class Context {
     path: string;
     url: string;
     query: string | null;
+    env: Config | null;
 
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.request = req;
