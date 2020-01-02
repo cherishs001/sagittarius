@@ -1,4 +1,6 @@
 import {IncomingMessage, ServerResponse} from 'http';
+import * as url from 'url';
+import Config from './config';
 import * as url from 'fast-url-parser';
 
 class Context {
@@ -12,6 +14,7 @@ class Context {
     path: string;
     url: string;
     query: string | null;
+    env: Config | null;
 
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.request = req;

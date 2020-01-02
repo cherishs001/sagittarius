@@ -5,6 +5,9 @@ import error from './error';
 import response from './response';
 import params from './params';
 import Router from './router';
+import Load from './load';
+import * as path from "path";
+import Config from './config';
 
 /**
  * 提供对http的封装
@@ -13,6 +16,7 @@ class Core {
     private _server: Server;
     private _port: number = 3000;
     private readonly _middleware_list: Array<(ctx: Context, next: (i?: number) => {}) => {}>;
+    private _config: any;
 
     constructor() {
         this._middleware_list = [];
@@ -22,12 +26,21 @@ class Core {
         this._middleware_list.push(middleware);
     }
 
-    listen(port?: number, listeningListener?: () => void): void {
-        const fn = this.composeMiddleware();
+    listen(listeningListener?: (Environment) => void): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            const fn = this.composeMiddleware();
 
-        const router = new Router();
-        router.init();
-
+            const router = new Router();
+            router.init();
+          
+            // 加载配置
+            const config = Load.init(path.join(process.cwd(), './config'));
+            const configs = {};
+            for (const item of config) {
+                const c = new item['func'];
+                await c.init();
+                configs[item['name']] = c;
+            }
         this._middleware_list.unshift(router.router.bind(router));
         this._middleware_list.unshift(response);
         this._middleware_list.unshift(params);
@@ -44,7 +57,26 @@ class Core {
             if (listeningListener) {
                 listeningListener();
             }
-        });
+            this._config = configs[process.env.NODE_ENV];
+
+            this._middleware_list.unshift(router.router.bind(router));
+            this._middleware_list.unshift(response);
+            this._middleware_list.unshift(params);
+            this._middleware_list.unshift(error);
+
+            this._server = http.createServer(async (req, res) => {
+                const context = new Context(req, res);
+                context.env = this._config;
+                await fn(context);
+            });
+            this._port = this._config['port'];
+            this._server.listen(this._port, () => {
+                if (listeningListener) {
+                    listeningListener(this._config);
+                    resolve();
+                }
+            });
+        })
     }
 
     composeMiddleware(): (ctx: Context) => {} {
