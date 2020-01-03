@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "build/lib/lib/index.js",
+  "types": "build/@types/lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint -c tslint.json -p tsconfig.json",
