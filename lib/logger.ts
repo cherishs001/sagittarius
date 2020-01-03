@@ -62,21 +62,15 @@ class Logger {
     }
 
     error(msg: string) {
-        if (this.level === 'ALL' || this.level === 'ERROR') {
-            this._log('ERROR', msg);
-        }
+        this._log('ERROR', msg);
     }
 
     fatal(msg: string) {
-        if (this.level === 'ALL' || this.level === 'FATAL') {
-            this._log('FATAL', msg);
-        }
+        this._log('FATAL', msg);
     }
 
     off(msg: string) {
-        if (this.level === 'ALL' || this.level === 'OFF') {
-            this._log('OFF', msg);
-        }
+        this._log('OFF', msg);
     }
 
     mark(msg: string) {

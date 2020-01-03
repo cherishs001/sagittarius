@@ -2,6 +2,7 @@ import {IncomingMessage, ServerResponse} from 'http';
 import Config from './config';
 import * as url from 'fast-url-parser';
 import {Logger} from './logger';
+import {Connection} from 'typeorm';
 
 class Context {
     request: IncomingMessage;
@@ -16,6 +17,9 @@ class Context {
     query: string | null;
     env: Config | null;
     logs: Logger;
+    database: {
+        [propName: string]: Connection;
+    };
 
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.request = req;

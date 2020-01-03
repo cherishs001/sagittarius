@@ -6,8 +6,9 @@ import response from './response';
 import params from './params';
 import Router from './router';
 import Load from './load';
-import * as path from "path";
+import * as path from 'path';
 import {Logger, LogLevel} from './logger';
+import {Connection, createConnection} from 'typeorm';
 
 /**
  * 提供对http的封装
@@ -51,8 +52,19 @@ class Core {
 
             this._port = this._config['port'];
 
+            // 注入日志
             const logs = new Logger(this._config['logs']['type'], path.join(process.cwd(), './logs/'));
             logs.level = this._config['logs']['level'];
+
+            // 注入数据库
+            const database: {
+                [propName: string]: Connection;
+            } = {};
+            for (const key in this._config['database']) {
+                if (this._config['database'].hasOwnProperty(key)) {
+                    database[key] = await createConnection(this._config['database'][key]);
+                }
+            }
 
             this._server = http.createServer(async (req, res) => {
                 const context = new Context(req, res);
@@ -60,6 +72,7 @@ class Core {
                     logs.level = req.headers['x-logs-level'] as LogLevel;
                 }
                 context.logs = logs;
+                context.database = database;
                 await fn(context);
             }).listen(this._port, () => {
                 if (listeningListener) {

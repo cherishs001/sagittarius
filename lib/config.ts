@@ -4,9 +4,10 @@ interface Database {
     type: 'mysql'|'redis',
     host: string,
     port: number,
-    user?: string,
+    username?: string,
     password?: string,
     database?: string,
+    entities?: Array<any>,
 }
 
 interface Logs {
