@@ -5,6 +5,7 @@ export default class Login extends Service {
 
     async GET(ctx: Context): Promise<void> {
         const {id} = ctx.params;
+        ctx.logs.debug(`debug info`);
         ctx.body = {
             id: id,
         };

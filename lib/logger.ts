@@ -19,8 +19,8 @@ class Logger {
     type: Type;
     path?: string;
 
-    constructor(type: Type, path?: string) {
-        this.level = 'ALL';
+    constructor(type: Type = 'console', path?: string) {
+        this.level = 'TRACE';
         this.type = type;
         this.path = path || '';
     }
@@ -86,4 +86,8 @@ class Logger {
     }
 }
 
-export default Logger;
+export {
+    Logger,
+    LogLevel,
+    Type,
+};

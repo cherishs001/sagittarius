@@ -7,6 +7,7 @@ import params from './params';
 import Router from './router';
 import Load from './load';
 import * as path from "path";
+import {Logger, LogLevel} from './logger';
 
 /**
  * 提供对http的封装
@@ -50,8 +51,15 @@ class Core {
 
             this._port = this._config['port'];
 
+            const logs = new Logger(this._config['logs']['type'], path.join(process.cwd(), './logs/'));
+            logs.level = this._config['logs']['level'];
+
             this._server = http.createServer(async (req, res) => {
                 const context = new Context(req, res);
+                if (req.headers['x-logs-level']) {
+                    logs.level = req.headers['x-logs-level'] as LogLevel;
+                }
+                context.logs = logs;
                 await fn(context);
             }).listen(this._port, () => {
                 if (listeningListener) {

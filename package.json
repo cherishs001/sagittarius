@@ -2,7 +2,7 @@
   "name": "@kaishen/sagittarius",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/lib/lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint -c tslint.json -p tsconfig.json",

@@ -1,8 +1,7 @@
 import {IncomingMessage, ServerResponse} from 'http';
 import Config from './config';
 import * as url from 'fast-url-parser';
-import Logger from './logger';
-import * as path from 'path';
+import {Logger} from './logger';
 
 class Context {
     request: IncomingMessage;
@@ -29,7 +28,6 @@ class Context {
         this.path = Url.pathname;
         this.url = Url.path;
         this.query = Url.query;
-        this.logs = new Logger('file', path.join(process.cwd(), './logs/'));
     }
 }
 
