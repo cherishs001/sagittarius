@@ -2,7 +2,7 @@ import {Context, Service} from '../../lib';
 import {Test} from '../model/DataCenter';
 
 export default class Login extends Service {
-    path = '/api/v1/login';
+    path: string = '/api/v1/login';
 
     async GET(ctx: Context): Promise<void> {
         const {id} = ctx.params;

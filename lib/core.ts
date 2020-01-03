@@ -27,7 +27,7 @@ class Core {
         this._middleware_list.push(middleware);
     }
 
-    listen(listeningListener?: (Environment) => void): Promise<void> {
+    listen(listeningListener?: (Environment: any) => void): Promise<void> {
         return new Promise<void>(async (resolve) => {
             const fn = this.composeMiddleware();
 

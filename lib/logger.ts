@@ -25,6 +25,48 @@ class Logger {
         this.path = path || '';
     }
 
+    trace(msg: string): void {
+        if (this.level === 'ALL' || this.level === 'TRACE') {
+            this._log('TRACE', msg);
+        }
+    }
+
+    info(msg: string): void {
+        if (this.level === 'ALL' || this.level === 'INFO') {
+            this._log('INFO', msg);
+        }
+    }
+
+    debug(msg: string): void {
+        if (this.level === 'ALL' || this.level === 'DEBUG') {
+            this._log('DEBUG', msg);
+        }
+    }
+
+    warn(msg: string): void {
+        if (this.level === 'ALL' || this.level === 'WARN') {
+            this._log('WARN', msg);
+        }
+    }
+
+    error(msg: string): void {
+        this._log('ERROR', msg);
+    }
+
+    fatal(msg: string): void {
+        this._log('FATAL', msg);
+    }
+
+    off(msg: string): void {
+        this._log('OFF', msg);
+    }
+
+    mark(msg: string): void {
+        if (this.level === 'ALL' || this.level === 'MARK') {
+            this._log('MARK', msg);
+        }
+    }
+
     private _log(name: string, msg: string): void {
         // 按照配置写入文件或控制台
         const time = moment();
@@ -34,48 +76,6 @@ class Logger {
         }
         if (this.type === 'file') {
             fs.appendFileSync(`${this.path}${name}-${time.format('YYYY年MM月DD日')}${time.hour()}时.log`, msg2 + '\r\n');
-        }
-    }
-
-    trace(msg: string) {
-        if (this.level === 'ALL' || this.level === 'TRACE') {
-            this._log('TRACE', msg);
-        }
-    }
-
-    info(msg: string) {
-        if (this.level === 'ALL' || this.level === 'INFO') {
-            this._log('INFO', msg);
-        }
-    }
-
-    debug(msg: string) {
-        if (this.level === 'ALL' || this.level === 'DEBUG') {
-            this._log('DEBUG', msg);
-        }
-    }
-
-    warn(msg: string) {
-        if (this.level === 'ALL' || this.level === 'WARN') {
-            this._log('WARN', msg);
-        }
-    }
-
-    error(msg: string) {
-        this._log('ERROR', msg);
-    }
-
-    fatal(msg: string) {
-        this._log('FATAL', msg);
-    }
-
-    off(msg: string) {
-        this._log('OFF', msg);
-    }
-
-    mark(msg: string) {
-        if (this.level === 'ALL' || this.level === 'MARK') {
-            this._log('MARK', msg);
         }
     }
 }
