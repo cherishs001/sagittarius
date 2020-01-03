@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryColumn} from 'typeorm';
+import {Orm} from '../../lib';
+const {Entity, Column, PrimaryColumn} = Orm;
 
 @Entity()
 export class Test {

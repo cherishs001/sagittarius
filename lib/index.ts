@@ -3,6 +3,7 @@ import Context from './context';
 import Service from './service';
 import Config from './config';
 import {Logger} from './logger';
+import * as Orm from 'typeorm';
 
 class Sagittarius extends Core {
     static app: Sagittarius = new Sagittarius();
@@ -18,4 +19,5 @@ export {
     Service,
     Config,
     Logger,
+    Orm,
 };
