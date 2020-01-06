@@ -5,8 +5,6 @@ import {Logger} from './logger';
 import {Connection} from 'typeorm';
 
 class Context {
-    private _code: number;
-
     request: IncomingMessage;
     response: ServerResponse;
     body: any;
@@ -28,6 +26,8 @@ class Context {
         [propName: string]: Connection;
     };
 
+    private _code: number;
+
     set code(val: number) {
         this._code = val;
         if (val !== 0) {
@@ -38,7 +38,7 @@ class Context {
         }
     }
 
-    get code() {
+    get code(): number {
         return this._code;
     }
 
