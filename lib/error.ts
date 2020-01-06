@@ -5,9 +5,18 @@ const error = async (ctx: Context, next) => {
     try {
         await next();
     } catch (e) {
-        ctx.logs.error(e.toString());
-        ctx.response.writeHead(500);
-        ctx.response.end('error server 500 http/1.1');
+        ctx.logs.error(e.message || e.toString());
+        if (e.status && e.message) {
+            ctx.response.setHeader('content-type', 'application/json;utf-8');
+            ctx.response.writeHead(200);
+            ctx.response.end(JSON.stringify({
+                status: e.status,
+                message: e.message,
+            }));
+        } else {
+            ctx.response.writeHead(500);
+            ctx.response.end('error server 500 http/1.1');
+        }
     }
     const end = new Date().getTime();
     let ipAddress;

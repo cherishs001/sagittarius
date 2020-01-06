@@ -23,6 +23,9 @@ abstract class Config {
         [propName: string]: Database;
     };
     env: string = 'dev';
+    error: {
+        [propName: number]: string;
+    };
 
     async init(): Promise<void> {};
 }

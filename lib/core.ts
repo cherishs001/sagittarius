@@ -66,6 +66,7 @@ class Core {
                 }
             }
 
+
             this._server = http.createServer(async (req, res) => {
                 const context = new Context(req, res);
                 if (req.headers['x-logs-level']) {
@@ -73,6 +74,7 @@ class Core {
                 }
                 context.logs = logs;
                 context.database = database;
+                context.error = this._config['error'];
                 await fn(context);
             }).listen(this._port, () => {
                 if (listeningListener) {

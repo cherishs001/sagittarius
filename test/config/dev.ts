@@ -9,6 +9,9 @@ export default class Dev extends Config {
             type: 'console',
             level: 'TRACE',
         };
+        this.error = {
+            5100: '数据错误',
+        };
         this.database = {
             data_center: {
                 type: 'mysql',

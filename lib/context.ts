@@ -5,6 +5,8 @@ import {Logger} from './logger';
 import {Connection} from 'typeorm';
 
 class Context {
+    private _code: number;
+
     request: IncomingMessage;
     response: ServerResponse;
     body: any;
@@ -17,9 +19,28 @@ class Context {
     query: string | null;
     env: Config | null;
     logs: Logger;
+    info: string | null;
+    'content-type': string | null;
+    error: {
+        [propName: number]: string;
+    };
     database: {
         [propName: string]: Connection;
     };
+
+    set code(val: number) {
+        this._code = val;
+        if (val !== 0) {
+            throw {
+                status: val,
+                message: this.error[val],
+            }
+        }
+    }
+
+    get code() {
+        return this._code;
+    }
 
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.request = req;
@@ -32,6 +53,7 @@ class Context {
         this.path = Url.pathname;
         this.url = Url.path;
         this.query = Url.query;
+        this.code = 0;
     }
 }
 
