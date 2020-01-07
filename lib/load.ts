@@ -11,9 +11,11 @@ class Load {
             const filePath = path.join(dir, file);
             const stats = fs.statSync(filePath);
             if (stats.isFile()) {
-                if (file.match(/\.ts$/) !== null && file !== 'index.ts') {
-                    const name = filePath.replace('.ts', '');
-                    const key = file.replace('.ts', '');
+                if (file.match(/\.ts|.js$/) !== null) {
+                    let name = filePath.replace('.ts', '');
+                    name = name.replace('.js', '');
+                    let key = file.replace('.ts', '');
+                    key = key.replace('.js', '');
                     const module = require(name).default;
                     dynamicModules.push({
                         name: key,
