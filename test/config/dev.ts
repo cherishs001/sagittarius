@@ -1,27 +1,38 @@
-import {Config} from '../../lib';
-import {Test} from '../model/DataCenter';
+import {Config} from '../../lib/index';
+import * as request from 'request';
 
 export default class Dev extends Config {
     async init(): Promise<void> {
-        this.env = 'dev';
-        this.port = 3000;
-        this.logs = {
-            type: 'console',
-            level: 'TRACE',
-        };
-        this.error = {
-            5100: '数据错误',
-        };
-        this.database = {
-            data_center: {
-                type: 'mysql',
-                host: 'localhost',
-                port: 3306,
-                username: 'root',
-                password: '123456',
-                database: 'data_center',
-                entities: [Test],
-            },
-        };
+        return new Promise(async (resolve, reject) => {
+            this.env = 'dev';
+            this.port = 3000;
+            this.logs = {
+                type: 'console',
+                level: 'TRACE',
+            };
+            const res: any = await this.reqs(`https://api.kaishens.cn/config/v1/server_config`);
+            res.status;
+            const error = {};
+            for (const item of res['data']['status_list']) {
+                error[item['status']] = item['message'];
+            }
+            this.error = error;
+            resolve();
+        })
+    }
+
+    async reqs(uri: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            request.get(
+                uri,
+                (err, r) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.parse(r.body));
+                    }
+                },
+            );
+        })
     }
 }

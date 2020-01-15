@@ -38,9 +38,11 @@ class Core {
             const config = Load.init(path.join(process.cwd(), './config'));
             const configs = {};
             for (const item of config) {
-                const c = new item['func'];
-                await c.init();
-                configs[item['name']] = c;
+                if (item['name'] === process.env.NODE_ENV) {
+                    const c = new item['func'];
+                    await c.init();
+                    configs[item['name']] = c;
+                }
             }
 
             this._config = configs[process.env.NODE_ENV];
