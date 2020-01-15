@@ -27,15 +27,43 @@ class Router {
     async router(ctx: Context, next: (i?: number) => {}): Promise<void> {
         if (this._services.hasOwnProperty(ctx.path)) {
             if (ctx.method === 'GET' && this._services[ctx.path].GET) {
+                try {
+                    if (this._services[ctx.path].get_schema) {
+                        this._services[ctx.path].get_schema(ctx.params);
+                    }
+                } catch (e) {
+                    ctx.code = 4001;
+                }
                 await this._services[ctx.path].GET(ctx);
             }
             if (ctx.method === 'POST' && this._services[ctx.path].POST) {
+                try {
+                    if (this._services[ctx.path].post_schema) {
+                        this._services[ctx.path].post_schema(ctx.params);
+                    }
+                } catch (e) {
+                    ctx.code = 4001;
+                }
                 await this._services[ctx.path].POST(ctx);
             }
             if (ctx.method === 'PUT' && this._services[ctx.path].PUT) {
+                try {
+                    if (this._services[ctx.path].put_schema) {
+                        this._services[ctx.path].put_schema(ctx.params);
+                    }
+                } catch (e) {
+                    ctx.code = 4001;
+                }
                 await this._services[ctx.path].PUT(ctx);
             }
             if (ctx.method === 'DELETE' && this._services[ctx.path].DELETE) {
+                try {
+                    if (this._services[ctx.path].delete_schema) {
+                        this._services[ctx.path].delete_schema(ctx.params);
+                    }
+                } catch (e) {
+                    ctx.code = 4001;
+                }
                 await this._services[ctx.path].DELETE(ctx);
             }
         }

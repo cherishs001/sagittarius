@@ -26,9 +26,7 @@ class Logger {
     }
 
     trace(msg: string): void {
-        if (this.level === 'ALL' || this.level === 'TRACE') {
-            this._log('TRACE', msg);
-        }
+        this._log('TRACE', msg);
     }
 
     info(msg: string): void {

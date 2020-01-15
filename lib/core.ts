@@ -57,12 +57,9 @@ class Core {
             logs.level = this._config['logs']['level'];
 
             // 注入数据库
-            const database: {
-                [propName: string]: Connection;
-            } = {};
             for (const key in this._config['database']) {
                 if (this._config['database'].hasOwnProperty(key)) {
-                    database[key] = await createConnection(this._config['database'][key]);
+                    await createConnection(this._config['database'][key]);
                 }
             }
 
@@ -73,7 +70,6 @@ class Core {
                     logs.level = req.headers['x-logs-level'] as LogLevel;
                 }
                 context.logs = logs;
-                context.database = database;
                 context.error = this._config['error'];
                 await fn(context);
             }).listen(this._port, () => {

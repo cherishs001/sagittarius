@@ -2,7 +2,6 @@ import {IncomingMessage, ServerResponse} from 'http';
 import Config from './config';
 import * as url from 'fast-url-parser';
 import {Logger} from './logger';
-import {Connection} from 'typeorm';
 
 class Context {
     request: IncomingMessage;
@@ -22,18 +21,22 @@ class Context {
     error: {
         [propName: number]: string;
     };
-    database: {
-        [propName: string]: Connection;
-    };
 
     private _code: number;
 
     set code(val: number) {
         this._code = val;
         if (val !== 0) {
-            throw {
-                status: val,
-                message: this.error[val],
+            if (val === 4001) {
+                throw {
+                    status: val,
+                    message: '请求参数校验失败',
+                }
+            } else {
+                throw {
+                    status: val,
+                    message: this.error[val],
+                }
             }
         }
     }
