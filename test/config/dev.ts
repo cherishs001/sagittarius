@@ -1,5 +1,4 @@
-import {Config} from '../../lib/index';
-import * as request from 'request';
+import {Config, Fetch} from '../../lib/index';
 
 export default class Dev extends Config {
     async init(): Promise<void> {
@@ -10,29 +9,19 @@ export default class Dev extends Config {
                 type: 'console',
                 level: 'TRACE',
             };
-            const res: any = await this.reqs(`https://api.kaishens.cn/config/v1/server_config`);
-            res.status;
+            const res: any = await Fetch(
+                'https://api.kaishens.cn/config/v1/server_config',
+                {
+                    method: 'GET',
+                    json: true,
+                },
+            );
             const error = {};
             for (const item of res['data']['status_list']) {
                 error[item['status']] = item['message'];
             }
             this.error = error;
             resolve();
-        })
-    }
-
-    async reqs(uri: string): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            request.get(
-                uri,
-                (err, r) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(JSON.parse(r.body));
-                    }
-                },
-            );
         })
     }
 }

@@ -3,6 +3,7 @@ import Context from './context';
 import Service from './service';
 import Config from './config';
 import {Logger} from './logger';
+import {Fetch} from './fetch';
 import * as Orm from 'typeorm';
 import * as Schema from 'superstruct';
 
@@ -22,4 +23,5 @@ export {
     Logger,
     Orm,
     Schema,
+    Fetch,
 };
