@@ -8,7 +8,7 @@ import Router from './router';
 import Load from './load';
 import * as path from 'path';
 import {Logger, LogLevel} from './logger';
-import {Connection, createConnection} from 'typeorm';
+import {Connection, createConnections} from 'typeorm';
 
 /**
  * 提供对http的封装
@@ -59,11 +59,13 @@ class Core {
             logs.level = this._config['logs']['level'];
 
             // 注入数据库
+            const db_tmp = [];
             for (const key in this._config['database']) {
                 if (this._config['database'].hasOwnProperty(key)) {
-                    await createConnection(this._config['database'][key]);
+                    db_tmp.push(this._config['database'][key]);
                 }
             }
+            await createConnections(db_tmp);
 
 
             this._server = http.createServer(async (req, res) => {
