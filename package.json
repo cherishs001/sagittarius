@@ -1,6 +1,6 @@
 {
   "name": "@kaishen/sagittarius",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "build/lib/lib/index.js",
   "types": "build/@types/lib/index.d.ts",

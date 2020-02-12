@@ -62,7 +62,10 @@ class Core {
             const db_tmp = [];
             for (const key in this._config['database']) {
                 if (this._config['database'].hasOwnProperty(key)) {
-                    db_tmp.push(this._config['database'][key]);
+                    db_tmp.push({
+                        ...this._config['database'][key],
+                        name: key,
+                    });
                 }
             }
             await createConnections(db_tmp);
