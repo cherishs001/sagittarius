@@ -23,6 +23,7 @@ class Context {
         [propName: number]: string;
     };
     snow_id: Snow;
+    static_path: string;
 
     private _code: number;
 
