@@ -4,7 +4,7 @@ const struct = Schema.superstruct({
     types: {
         any: (value: any) => {
             return true;
-        }
+        },
     },
 });
 
