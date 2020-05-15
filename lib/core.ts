@@ -8,7 +8,8 @@ import Router from './router';
 import Load from './load';
 import * as path from 'path';
 import {Logger, LogLevel} from './logger';
-import {Connection, createConnections} from 'typeorm';
+import {createConnections} from 'typeorm';
+import * as Snow from '@axihe/snowflake';
 
 /**
  * 提供对http的封装
@@ -78,6 +79,7 @@ class Core {
                 }
                 context.logs = logs;
                 context.error = this._config['error'];
+                context.snow_id = new Snow(0, 0);
                 await fn(context);
             }).listen(this._port, () => {
                 if (listeningListener) {

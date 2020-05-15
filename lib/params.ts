@@ -40,19 +40,19 @@ const getSuffixName = (fileName: string) => {
     return nameList[nameList.length - 1];
 };
 
-const pipeBusBoy = (busboy, req) => {
+const pipeBusBoy = (busboy, req, snow_id) => {
     const formData: any = {};
 
     return new Promise(async (resolve, reject) => {
         const snowRes = {
-            data: {snowId: 123},
+            data: {snowId: snow_id},
         };
 
         //  解析请求文件事件
         busboy.on('file', (filenames, file, filename, encoding, mimetype) => {
             const name = `${snowRes['data']['snowId']}.${getSuffixName(filename)}`;
             // let len = 0;
-            const p = path.join(__dirname, `../static/${name}`);
+            const p = path.join(process.cwd(), `./static/${name}`);
             file.pipe(fs.createWriteStream(p));
             formData[filenames] = {
                 title: filename,
@@ -88,8 +88,9 @@ const pipeBusBoy = (busboy, req) => {
 const params = async (ctx: Context, next) => {
     if (ctx.method === 'POST') {
         if (ctx.headers['content-type'].indexOf('multipart/form-data') >= 0) {
+            const snow_id = ctx.snow_id.nextId();
             const busboy = new Busboy({headers: ctx.headers});
-            ctx.params = await pipeBusBoy(busboy, ctx.request);
+            ctx.params = await pipeBusBoy(busboy, ctx.request, snow_id);
         } else {
             ctx.params = await parsePostData(ctx);
         }

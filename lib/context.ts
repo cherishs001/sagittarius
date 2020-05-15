@@ -2,6 +2,7 @@ import {IncomingMessage, ServerResponse} from 'http';
 import Config from './config';
 import * as url from 'fast-url-parser';
 import {Logger} from './logger';
+import * as Snow from '@axihe/snowflake';
 
 class Context {
     request: IncomingMessage;
@@ -21,6 +22,7 @@ class Context {
     error: {
         [propName: number]: string;
     };
+    snow_id: Snow;
 
     private _code: number;
 
