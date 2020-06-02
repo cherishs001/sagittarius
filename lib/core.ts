@@ -81,6 +81,7 @@ class Core {
                 context.error = this._config['error'];
                 context.static_path = this._config['static_path'] || path.join(process.cwd(), './static');
                 context.snow_id = new Snow(0, 0);
+                context.config = this._config;
                 await fn(context);
             }).listen(this._port, () => {
                 if (listeningListener) {

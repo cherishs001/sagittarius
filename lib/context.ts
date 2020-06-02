@@ -16,6 +16,7 @@ class Context {
     url: string;
     query: string | null;
     env: Config | null;
+    config: Config | null;
     logs: Logger;
     info: string | null;
     'content-type': string | null;
