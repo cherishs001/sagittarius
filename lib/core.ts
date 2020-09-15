@@ -28,8 +28,8 @@ class Core {
         this._middleware_list.push(middleware);
     }
 
-    listen(listeningListener?: (Environment: any) => void): Promise<void> {
-        return new Promise<void>(async (resolve) => {
+    listen(listeningListener?: (Environment: any) => void): Promise<any> {
+        return new Promise<any>(async (resolve) => {
             const fn = this.composeMiddleware();
 
             const router = new Router();
@@ -86,7 +86,7 @@ class Core {
             }).listen(this._port, () => {
                 if (listeningListener) {
                     listeningListener(this._config);
-                    resolve();
+                    resolve(this._server);
                 }
             });
         });
