@@ -4,7 +4,7 @@ import Service from './service';
 import Config from './config';
 import {Logger} from './logger';
 import {Fetch} from './fetch';
-import * as Orm from 'typeorm';
+import {Orm, Database, getConnection} from '@kaishen/orm';
 import * as Schema from 'superstruct';
 
 class Sagittarius extends Core {
@@ -22,6 +22,8 @@ export {
     Config,
     Logger,
     Orm,
+    Database,
+    getConnection,
     Schema,
     Fetch,
 };

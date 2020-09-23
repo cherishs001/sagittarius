@@ -8,7 +8,7 @@ import Router from './router';
 import Load from './load';
 import * as path from 'path';
 import {Logger, LogLevel} from './logger';
-import {createConnections} from 'typeorm';
+import {Orm, Database} from '@kaishen/orm';
 import * as Snow from '@axihe/snowflake';
 
 /**
@@ -60,17 +60,19 @@ class Core {
             logs.level = this._config['logs']['level'];
 
             // 注入数据库
-            const db_tmp = [];
+            const database: {[propsName: string]: Database} = {};
             for (const key in this._config['database']) {
                 if (this._config['database'].hasOwnProperty(key)) {
-                    db_tmp.push({
-                        ...this._config['database'][key],
-                        name: key,
-                    });
+                    const tmp = new Orm(
+                        this._config['database'][key].host,
+                        this._config['database'][key].port,
+                        this._config['database'][key].username,
+                        this._config['database'][key].password,
+                        this._config['database'][key].database,
+                    );
+                    database[key] = tmp.authenticate(key);
                 }
             }
-            await createConnections(db_tmp);
-
 
             this._server = http.createServer(async (req, res) => {
                 const context = new Context(req, res);
@@ -82,6 +84,7 @@ class Core {
                 context.static_path = this._config['static_path'] || path.join(process.cwd(), './static');
                 context.snow_id = new Snow(0, 0);
                 context.config = this._config;
+                context.database = database;
                 await fn(context);
             }).listen(this._port, () => {
                 if (listeningListener) {

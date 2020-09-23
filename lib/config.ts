@@ -7,7 +7,6 @@ interface Database {
     username?: string,
     password?: string,
     database?: string,
-    entities?: Array<any>,
 }
 
 interface Logs {
