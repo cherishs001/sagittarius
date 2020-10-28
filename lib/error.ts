@@ -15,7 +15,10 @@ const error = async (ctx: Context, next) => {
             }));
         } else {
             ctx.response.writeHead(500);
-            ctx.response.end('error server 500 http/1.1');
+            ctx.response.end(JSON.stringify({
+                status: 500,
+                message: e.message || e.toString,
+            }));
         }
     }
     const end = new Date().getTime();

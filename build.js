@@ -34,7 +34,6 @@ deleteAll('./build');
 exec('npm run lint && tsc', (err, stdout, stderr) => {
     if(err) {
         console.log(err);
-        console.log(123);
         return;
     }
     console.log(stdout);

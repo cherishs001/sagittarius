@@ -1,5 +1,5 @@
 import * as http from 'http';
-import {Server} from 'http';
+import { Server } from 'http';
 import Context from './context';
 import error from './error';
 import response from './response';
@@ -7,9 +7,10 @@ import params from './params';
 import Router from './router';
 import Load from './load';
 import * as path from 'path';
-import {Logger, LogLevel} from './logger';
-import {Orm, Database} from '@kaishen/orm';
+import { Logger, LogLevel } from './logger';
+import { Orm, Database } from '@kaishen/orm';
 import * as Snow from '@axihe/snowflake';
+import * as domain from 'domain';
 
 /**
  * 提供对http的封装
@@ -60,7 +61,7 @@ class Core {
             logs.level = this._config['logs']['level'];
 
             // 注入数据库
-            const database: {[propsName: string]: Database} = {};
+            const database: { [propsName: string]: Database } = {};
             for (const key in this._config['database']) {
                 if (this._config['database'].hasOwnProperty(key)) {
                     const tmp = new Orm(
@@ -75,6 +76,7 @@ class Core {
             }
 
             this._server = http.createServer(async (req, res) => {
+                const d = domain.create();
                 const context = new Context(req, res);
                 if (req.headers['x-logs-level']) {
                     logs.level = req.headers['x-logs-level'] as LogLevel;
@@ -86,6 +88,14 @@ class Core {
                 context.config = this._config;
                 context.database = database;
                 await fn(context);
+                d.on('error', (err) => {
+                    context.response.writeHead(500);
+                    context.response.end(JSON.stringify({
+                        status: 500,
+                        message: err.message || err.toString,
+                    }));
+                    d.exit();
+                })
             }).listen(this._port, () => {
                 if (listeningListener) {
                     listeningListener(this._config);

@@ -3,7 +3,7 @@ import Context from './context';
 import Service from './service';
 import Config from './config';
 import {Logger} from './logger';
-import {Fetch} from './fetch';
+import Fetch from './fetch';
 import {Orm, Database, getConnection} from '@kaishen/orm';
 import * as Schema from 'superstruct';
 
