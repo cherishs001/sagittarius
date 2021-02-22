@@ -25,6 +25,9 @@ abstract class Config {
     error: {
         [propName: number]: string;
     };
+    custom?: {
+        [propName: string]: any;
+    };
     static_path: string;
 
     async init(): Promise<void> {};

@@ -8,7 +8,7 @@ import Router from './router';
 import Load from './load';
 import * as path from 'path';
 import { Logger, LogLevel } from './logger';
-import { Orm, Database } from '@kaishen/orm';
+import { Orm, Connection } from '@kaishen/orm';
 import * as Snow from '@axihe/snowflake';
 import * as domain from 'domain';
 
@@ -31,8 +31,6 @@ class Core {
 
     listen(listeningListener?: (Environment: any) => void): Promise<any> {
         return new Promise<any>(async (resolve) => {
-            const fn = this.composeMiddleware();
-
             const router = new Router();
             router.init();
 
@@ -51,8 +49,8 @@ class Core {
 
             this._middleware_list.unshift(router.router.bind(router));
             this._middleware_list.unshift(response);
-            this._middleware_list.unshift(params);
             this._middleware_list.unshift(error);
+            this._middleware_list.unshift(params);
 
             this._port = this._config['port'];
 
@@ -61,7 +59,7 @@ class Core {
             logs.level = this._config['logs']['level'];
 
             // 注入数据库
-            const database: { [propsName: string]: Database } = {};
+            const database: { [propsName: string]: Connection } = {};
             for (const key in this._config['database']) {
                 if (this._config['database'].hasOwnProperty(key)) {
                     const tmp = new Orm(
@@ -74,6 +72,7 @@ class Core {
                     database[key] = tmp.authenticate(key);
                 }
             }
+            const fn = this.composeMiddleware();
 
             this._server = http.createServer(async (req, res) => {
                 const d = domain.create();

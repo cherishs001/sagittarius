@@ -15,11 +15,14 @@ const response = async (ctx: Context, next) => {
             data: ctx.body,
         }
     }
-    if (typeof ctx.body === 'object') {
+    if (typeof ctx.body === 'object' && !Buffer.isBuffer(ctx.body)) {
         ctx.body = JSON.stringify(ctx.body);
     }
     if (typeof ctx.body === 'number') {
         ctx.body = `${ctx.body}`;
+    }
+    if (Buffer.isBuffer(ctx.body)) {
+        ctx.body = ctx.body;
     }
     ctx.response.end(ctx.body);
 };

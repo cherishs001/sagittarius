@@ -3,7 +3,7 @@ import Config from './config';
 import * as url from 'fast-url-parser';
 import {Logger} from './logger';
 import * as Snow from '@axihe/snowflake';
-import {Database} from '@kaishen/orm';
+import {Connection} from '@kaishen/orm';
 
 class Context {
     request: IncomingMessage;
@@ -18,7 +18,7 @@ class Context {
     query: string | null;
     env: Config | null;
     config: Config | null;
-    database: {[propsName: string]: Database} | null;
+    database: {[propsName: string]: Connection} | null;
     logs: Logger;
     info: string | null;
     'content-type': string | null;
