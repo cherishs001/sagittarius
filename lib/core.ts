@@ -68,6 +68,7 @@ class Core {
                         this._config['database'][key].username,
                         this._config['database'][key].password,
                         this._config['database'][key].database,
+                        this._config['database'][key].pool,
                     );
                     database[key] = tmp.authenticate(key);
                 }

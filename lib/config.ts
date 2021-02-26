@@ -7,6 +7,7 @@ interface Database {
     username?: string,
     password?: string,
     database?: string,
+    pool?: {max: number, min: number}
 }
 
 interface Logs {
