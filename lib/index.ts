@@ -1,6 +1,8 @@
 import Core from './core';
 import Context from './context';
+import WSContext from './ws_context';
 import Service from './service';
+import Socket from './socket';
 import Config from './config';
 import {Logger} from './logger';
 import Fetch from './fetch';
@@ -26,4 +28,6 @@ export {
     getConnection,
     Schema,
     Fetch,
+    WSContext,
+    Socket,
 };

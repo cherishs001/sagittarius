@@ -1,6 +1,7 @@
 import * as http from 'http';
 import { Server } from 'http';
 import Context from './context';
+import WSContext from './ws_context';
 import error from './error';
 import response from './response';
 import params from './params';
@@ -11,6 +12,7 @@ import { Logger, LogLevel } from './logger';
 import { Orm, Connection } from '@kaishen/orm';
 import * as Snow from '@axihe/snowflake';
 import * as domain from 'domain';
+import * as ws from 'ws';
 
 /**
  * 提供对http的封装
@@ -96,11 +98,57 @@ class Core {
                     }));
                     d.exit();
                 })
-            }).listen(this._port, () => {
+            })
+            const wss = new ws.Server({ server: this._server });
+            // 导入socket函数
+            const sockets = Load.init(path.join(process.cwd(), './sockets'));
+            const _sockets = {};
+            for (const item of sockets) {
+                const socket = new item['func'];
+                const method = [new item['func']][0]['method'];
+                _sockets[method] = socket;
+            }
+            wss.on('connection', (ws) => {
+                ws.on('message', async (message) => {
+                    try {
+                        const ws_parmas = JSON.parse(message.toString());
+                        if (_sockets.hasOwnProperty(ws_parmas['method'])) {
+                            const context = new WSContext(ws_parmas);
+                            if (context.headers['x-logs-level']) {
+                                logs.level = context.headers['x-logs-level'] as LogLevel;
+                            }
+                            context.logs = logs;
+                            context.error = this._config['error'];
+                            context.snow_id = new Snow(0, 1);
+                            context.config = this._config;
+                            context.database = database;
+                            try {
+                                _sockets[ws_parmas['method']].params_schema(context.params);
+                            } catch(e) {
+                                context.code = 4001;
+                            }
+                            await _sockets[ws_parmas['method']].START(context);
+                            ws.send(JSON.stringify({status: 1000, message: context.info, data: context.body}))
+                        } else {
+                            ws.send(JSON.stringify({ status: 404, message: '404 Not Found' }))
+                        }
+                    } catch (e) {
+                        if (e.status && e.message) {
+                            ws.send(JSON.stringify(e))
+                        } else {
+                            ws.send(JSON.stringify({ status: 500, message: e.toString() }))
+                        }
+                    }
+                });
+                ws.send(this._config.ws_connect_msg || 'websocket服务连接成功');
+            })
+            this._server.listen(this._port, () => {
                 if (listeningListener) {
                     listeningListener(this._config);
-                    resolve(this._server);
                 }
+                // 这里如果有sockets函数配置，可以载入sockets
+
+                resolve(this._server);
             });
         });
     }

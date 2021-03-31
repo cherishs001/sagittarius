@@ -17,6 +17,7 @@ interface Logs {
 
 abstract class Config {
     port: number = 3000;
+    ws_connect_msg?: string;
     host: string = '0.0.0.0';
     logs: Logs;
     database: {
