@@ -129,7 +129,7 @@ const dirExists = async (dir) => {
 }
 
 const params = async (ctx: Context, next) => {
-    if (ctx.method === 'POST') {
+    if (ctx.method === 'POST' || ctx.method === 'DELETE') {
         if (ctx.headers['content-type'].indexOf('multipart/form-data') >= 0) {
             const snow_id = ctx.snow_id.nextId();
             const busboy = new Busboy({headers: ctx.headers});
