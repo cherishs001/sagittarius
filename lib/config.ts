@@ -31,6 +31,7 @@ abstract class Config {
         [propName: string]: any;
     };
     static_path: string;
+    cache?: {max?: number, timeout?: number}
 
     async init(): Promise<void> {};
 }

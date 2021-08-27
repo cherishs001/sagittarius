@@ -13,6 +13,7 @@ import { Orm, Connection } from '@kaishen/orm';
 import * as Snow from '@axihe/snowflake';
 import * as domain from 'domain';
 import * as ws from 'ws';
+import * as LRU from 'lru-cache'
 
 /**
  * 提供对http的封装
@@ -75,6 +76,13 @@ class Core {
                     database[key] = tmp.authenticate(key);
                 }
             }
+
+            // 生成缓存管理
+            const cache = new LRU({
+                max: this._config.cache.max ? this._config.cache.max : 500,
+                maxAge: this._config.cache.timeout ? this._config.cache.timeout : 3600000,
+            });
+
             const fn = this.composeMiddleware();
 
             this._server = http.createServer(async (req, res) => {
@@ -89,6 +97,7 @@ class Core {
                 context.snow_id = new Snow(0, 0);
                 context.config = this._config;
                 context.database = database;
+                context.cache = cache;
                 await fn(context);
                 d.on('error', (err) => {
                     context.response.writeHead(500);

@@ -4,6 +4,7 @@ import * as url from 'fast-url-parser';
 import {Logger} from './logger';
 import * as Snow from '@axihe/snowflake';
 import {Connection} from '@kaishen/orm';
+import LRUCache = require('lru-cache');
 
 class Context {
     request: IncomingMessage;
@@ -19,6 +20,7 @@ class Context {
     env: Config | null;
     config: Config | null;
     database: {[propsName: string]: Connection} | null;
+    cache: LRUCache<unknown, unknown>;
     logs: Logger;
     info: string | null;
     'content-type': string | null;
