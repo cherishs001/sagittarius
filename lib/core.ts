@@ -96,6 +96,7 @@ class Core {
             });
 
             const fn = this.composeMiddleware();
+            const id_worker = new Snow(0, 0);
 
             this._server = http.createServer(async (req, res) => {
                 const d = domain.create();
@@ -106,7 +107,7 @@ class Core {
                 context.logs = logs;
                 context.error = this._config['error'];
                 context.static_path = this._config['static_path'] || path.join(process.cwd(), './static');
-                context.snow_id = new Snow(0, 0);
+                context.snow_id = id_worker;
                 context.config = this._config;
                 context.database = database;
                 context.cache = cache;
@@ -140,7 +141,7 @@ class Core {
                             }
                             context.logs = logs;
                             context.error = this._config['error'];
-                            context.snow_id = new Snow(0, 1);
+                            context.snow_id = id_worker;
                             context.config = this._config;
                             context.database = database;
                             try {
