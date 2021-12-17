@@ -78,9 +78,21 @@ class Core {
             }
 
             // 生成缓存管理
+            const cache_config = {
+                max: 500,
+                timeout: 3600000,
+            }
+            if (this._config.cache) {
+                if (this._config.cache.max) {
+                    cache_config.max = this._config.cache.max;
+                }
+                if (this._config.cache.timeout) {
+                    cache_config.timeout = this._config.cache.timeout;
+                }
+            }
             const cache = new LRU({
-                max: this._config.cache.max ? this._config.cache.max : 500,
-                maxAge: this._config.cache.timeout ? this._config.cache.timeout : 3600000,
+                max: cache_config.max,
+                maxAge: cache_config.timeout,
             });
 
             const fn = this.composeMiddleware();
